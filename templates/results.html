@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Results</title>
+</head>
+<body>
+    <h1>Results</h1>
+    {% if torrents and torrents|length > 0 %}
+        <ul>
+        {% for torrent in torrents %}
+            <li>
+                <a href="{{ torrent.link }}">{{ torrent.title }}</a><br>
+                <strong>Comments:</strong> {{ torrent.comments }}<br>
+                <strong>Age:</strong> {{ torrent.age }}<br>
+                <strong>Size:</strong> {{ torrent.size }}<br>
+                <strong>Completed:</strong> {{ torrent.completed }}<br>
+                <strong>Seeders:</strong> {{ torrent.seeders }}<br>
+                <strong>Leechers:</strong> {{ torrent.leechers }}<br>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No results found.</p>
+    {% endif %}
+</body>
+</html>

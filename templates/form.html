@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recherche de Torrents</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column; /* Aligne les éléments verticalement */
+            align-items: center; /* Centre horizontalement */
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            padding-top: 20px; /* Ajoute de l'espace en haut */
+        }
+        .form-container {
+            background: #fff;
+            padding: 20px 30px;
+            border-radius: 8px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            margin-bottom: 20px; /* Ajoute de l'espace entre le formulaire et les résultats */
+        }
+        .form-container h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .radio-group {
+            display: flex;
+            justify-content: space-between;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+        /* Styles pour les résultats */
+        .results-container {
+            margin-top: 20px;
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 1000px;
+        }
+        .results-list {
+            display: flex;
+            flex-direction: column; /* Aligne les résultats verticalement */
+        }
+        .result-item {
+            display: flex; /* Utilise flex pour une mise en page plus agréable */
+            justify-content: space-between; /* Espace entre le titre et les infos */
+            margin-bottom: 10px;
+            padding: 5px 0; /* Espacement vertical pour chaque item */
+            overflow: hidden; /* Empêche le débordement de texte */
+            white-space: nowrap; /* Empêche le retour à la ligne */
+            text-overflow: ellipsis; /* Affiche '...' pour les textes trop longs */
+            align-items: center; /* Centre verticalement les éléments */
+        }
+        .result-item span {
+            flex: 1; /* Permet au texte de s'étendre et de s'ajuster */
+            max-width: 70%; /* Limite la largeur du titre */
+            overflow: hidden; /* Cache le texte débordant */
+            text-overflow: ellipsis; /* Affiche '...' pour les textes trop longs */
+            white-space: nowrap; /* Empêche le retour à la ligne */
+        }
+        .result-info {
+            margin-left: 10px; /* Ajoute un espace entre le titre et les infos */
+            white-space: nowrap; /* Empêche le retour à la ligne */
+            font-weight: bold;
+        }
+        .download-btn {
+            padding: 5px 10px;
+            font-size: 14px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px; /* Coins arrondis */
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .download-btn:hover {
+            background-color: #0056b3; /* Couleur au survol */
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Recherche de Torrent</h2>
+        <form id="searchForm">
+            <div class="form-group">
+                <label for="title">Titre</label>
+                <input type="text" id="title" placeholder="Entrez le titre" required>
+            </div>
+            <div class="form-group">
+                <label>Type de recherche</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="type" value="0" checked> Film</label>
+                    <label><input type="radio" name="type" value="1"> Film d'animation</label>
+                    <label><input type="radio" name="type" value="2"> Animé</label>
+                </div>
+            </div>
+            <button type="submit" class="submit-btn">Rechercher</button>
+        </form>
+    </div>
+
+    <div class="results-container" id="resultsContainer" style="display: none;">
+        <h3>Résultats de recherche</h3>
+        <div class="results-list" id="resultsList"></div>
+    </div>
+
+    <script>
+    document.getElementById("searchForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        const title = document.getElementById("title").value;
+        const type = document.querySelector('input[name="type"]:checked').value;
+
+        fetch("/search", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ title: title, type: type })
+        })
+        .then(response => response.json())
+        .then(data => {
+            const resultsContainer = document.getElementById("resultsContainer");
+            const resultsList = document.getElementById("resultsList");
+
+            // Effacer les résultats précédents
+            resultsList.innerHTML = '';
+
+            if (data.error) {
+                alert(data.error);
+                resultsContainer.style.display = 'none'; // Cacher les résultats en cas d'erreur
+            } else {
+                data.results.forEach(result => {
+                    const div = document.createElement('div');
+                    div.className = 'result-item';
+
+                    // Raccourcir le titre à 30 caractères
+                    const shortTitle = result.title.length > 30 ? result.title.substring(0, 30) + '...' : result.title;
+
+                    // Créez le bouton pour télécharger
+                    const button = document.createElement('button');
+                    button.innerText = "Télécharger";
+                    button.className = 'download-btn';
+
+                    // Ajoutez un événement au clic
+                    button.addEventListener('click', function() {
+                        fetch(`/call_function/${encodeURIComponent(result.link)}`, { method: 'GET' })
+                            .then(response => response.json())
+                            .then(data => {
+                                alert(data.message);
+                            })
+                            .catch(error => {
+                                console.error("Erreur:", error);
+                                alert("Une erreur est survenue lors du téléchargement.");
+                            });
+                    });
+
+                    div.innerHTML = `<span>${shortTitle}</span><span class="result-info">${result.size} - ${result.completed} complet</span>`;
+                    div.appendChild(button);
+                    resultsList.appendChild(div);
+                });
+
+                resultsContainer.style.display = 'block'; // Afficher les résultats
+            }
+        })
+        .catch(error => {
+            console.error("Erreur:", error);
+            alert("Une erreur est survenue lors de la recherche.");
+        });
+    });
+    </script>
+</body>
+</html>

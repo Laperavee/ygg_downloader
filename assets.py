@@ -7,9 +7,9 @@ headers = {
 
 cookies = {
     "account_created": "true",
-    "cf_clearance": "St6DokFyRvpt3YuT99fgZu23flv4z7G3ATzNzcgeGhg-1724000678-1.2.1.1-fhOyXl8HRwXktmq.gNgWc5KItnq3.O7WsCGtq3S5czgvE5g9eRW0GU5SRrLEXa0QJim6hO8VUzl_XMZjwCpDC4eEAF_v2iTshRdANZGGp85qMkyuH_jsxrdPr0hI2gbyi2FeaxH6V7HoJnlnzCmu.SNNOatXw5hP57oYmccEww1Qcul6falFHZyFjf1hlPCtF45M_YGEVxhJlgN58fLGl95Dx5IWCn60hyCdhqqXeWczNXGrxjedYR0oxO3KfHLnd9UaIzkMnKzBGWzUSTt2GlI1RK4.xP9vAbiIFYu7PvirP1X8Uh3JyLDPoE068ST.UDAqLpKaaQA_kfrz4oS3gJRgbrp0_lnn_NAoJgZGJlBfyaZ34EUkEd9E4gWKBb7l4aEOZOUTzsrTZ_17q9SNQtqYfzhrn1sxF97LMKusM9c",
-    "v51_promo_details": "eyJjb3VudGRvd25fZGF0ZSI6IjEwLzI4LzIwMjQgMjM6NTk6NTkiLCJ0cyI6MTczMDE1NjM5OX0=",
-    "ygg_": "ku8jhks7p66r380i5p5jf0aldjq4qovl"
+    "cf_clearance": "<YOUR_CF_CLEARANCE>",
+    "v51_promo_details": "<YOUR_PROMO_DETAILS>",
+    "ygg_": "<YOUR_YGG>"
 }
-proxy = {'http': 'http://brd-customer-hl_979cb51f-zone-datacenter_proxy1:auj6h5ua9f2v@brd.superproxy.io:22225',
-            'https': 'http://brd-customer-hl_979cb51f-zone-datacenter_proxy1:auj6h5ua9f2v@brd.superproxy.io:22225'}
+proxy = {'http': '<YOUR_PROXY>',
+            'https': '<YOUR_PROXY>'}

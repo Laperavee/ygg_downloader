@@ -137,9 +137,8 @@
         <h3>Résultats de recherche</h3>
         <div class="results-list" id="resultsList"></div>
     </div>
-
     <script>
-    document.getElementById("searchForm").addEventListener("submit", function(event) {
+        document.getElementById("searchForm").addEventListener("submit", function(event) {
         event.preventDefault();
 
         const title = document.getElementById("title").value;
@@ -157,51 +156,53 @@
             const resultsContainer = document.getElementById("resultsContainer");
             const resultsList = document.getElementById("resultsList");
 
-            // Effacer les résultats précédents
             resultsList.innerHTML = '';
 
             if (data.error) {
                 alert(data.error);
-                resultsContainer.style.display = 'none'; // Cacher les résultats en cas d'erreur
+                resultsContainer.style.display = 'none';
             } else {
                 data.results.forEach(result => {
                     const div = document.createElement('div');
                     div.className = 'result-item';
-
-                    // Raccourcir le titre à 30 caractères
                     const shortTitle = result.title.length > 30 ? result.title.substring(0, 30) + '...' : result.title;
 
-                    // Créez le bouton pour télécharger
-                    const button = document.createElement('button');
-                    button.innerText = "Télécharger";
-                    button.className = 'download-btn';
-
-                    // Ajoutez un événement au clic
-                    button.addEventListener('click', function() {
-                        fetch(`/call_function/${encodeURIComponent(result.link)}`, { method: 'GET' })
-                            .then(response => response.json())
-                            .then(data => {
-                                alert(data.message);
+                    const downloadButton = document.createElement('button');
+                    downloadButton.textContent = "Download";
+                    downloadButton.className = 'download-btn';
+                    downloadButton.onclick = function() {
+                        fetch(`/get_torrent_link?url=${encodeURIComponent(result.link)}`)
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Erreur lors de la récupération du lien de téléchargement.');
+                                }
+                                return response.json();
+                            })
+                            .then(downloadData => {
+                                console.log("Données de téléchargement reçues :", downloadData);
+                                if (downloadData.download_link) {
+                                    window.location.href = `/proxy?url=${encodeURIComponent(downloadData.download_link)}&title=${encodeURIComponent(downloadData.title)}`;
+                                } else {
+                                    alert("Erreur lors de l'obtention du lien de téléchargement.");
+                                }
                             })
                             .catch(error => {
                                 console.error("Erreur:", error);
-                                alert("Une erreur est survenue lors du téléchargement.");
                             });
-                    });
+                    };
 
                     div.innerHTML = `<span>${shortTitle}</span><span class="result-info">${result.size} - ${result.completed} complet</span>`;
-                    div.appendChild(button);
+                    div.appendChild(downloadButton);
                     resultsList.appendChild(div);
                 });
-
-                resultsContainer.style.display = 'block'; // Afficher les résultats
+                resultsContainer.style.display = 'block';
             }
         })
         .catch(error => {
             console.error("Erreur:", error);
-            alert("Une erreur est survenue lors de la recherche.");
         });
     });
     </script>
+
 </body>
 </html>

@@ -11,3 +11,5 @@ cookies = {
     "v51_promo_details": "eyJjb3VudGRvd25fZGF0ZSI6IjEwLzI4LzIwMjQgMjM6NTk6NTkiLCJ0cyI6MTczMDE1NjM5OX0=",
     "ygg_": "ku8jhks7p66r380i5p5jf0aldjq4qovl"
 }
+proxy = {'http': 'http://brd-customer-hl_979cb51f-zone-datacenter_proxy1:auj6h5ua9f2v@brd.superproxy.io:22225',
+            'https': 'http://brd-customer-hl_979cb51f-zone-datacenter_proxy1:auj6h5ua9f2v@brd.superproxy.io:22225'}
